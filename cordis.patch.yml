@@ -1,0 +1,8 @@
+# dsh-job-progress bundle patch — inserts the `job-progress` row into the profile.
+#
+# The row carries no required configuration: the progress directory defaults to
+# `<DSH home>/job-progress` and the panel polls the host on its own. A user layer
+# may override this row by id (`job-progress`) — the same-id row wins.
+- insert:
+    - id: job-progress
+      name: 'dsh-job-progress'
