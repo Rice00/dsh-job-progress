@@ -14,6 +14,7 @@ downloads, model conversions, renders, batch jobs — anything that runs in the 
 [![Runtime: Node 22+](https://img.shields.io/badge/runtime-Node%2022%2B-3c873a.svg)](#compatibility)
 [![Zero config](https://img.shields.io/badge/setup-zero%20config-1c7a54.svg)](#features)
 [![PRs: welcome](https://img.shields.io/badge/PRs-welcome-7096d1.svg)](#contributing)
+[![GitHub stars](https://img.shields.io/github/stars/Rice00/dsh-job-progress?style=flat&label=stars&color=7096d1)](https://github.com/Rice00/dsh-job-progress/stargazers)
 
 <img src="assets/screenshot.png" alt="The floating ball and its task panel" width="360" />
 
@@ -44,7 +45,8 @@ downloads, model conversions, renders, batch jobs — anything that runs in the 
 ### From a local folder (recommended)
 
 ```bash
-dsh plugin --profile <profile> add link:/abs/path/to/dsh-job-progress
+git clone https://github.com/Rice00/dsh-job-progress.git
+dsh plugin --profile <profile> add link:/abs/path/to/dsh-job-progress   # the checkout from above
 ```
 
 The bundle patch inserts one row (`job-progress`) into the profile. Then **restart that profile** —
@@ -57,7 +59,7 @@ files instead, use `file:/abs/path/to/dsh-job-progress` — then later edits nee
 ### From GitHub or npm
 
 ```bash
-dsh plugin --profile <profile> add github:<owner>/<repo>
+dsh plugin --profile <profile> add github:Rice00/dsh-job-progress
 dsh plugin --profile <profile> add dsh-job-progress        # once published to npm
 ```
 
@@ -66,7 +68,9 @@ dsh plugin --profile <profile> add dsh-job-progress        # once published to n
 ```
 Please install the DSH plugin dsh-job-progress for me:
 
-1) Install it into the web profile (use the absolute path of the checkout):
+1) Install it into the web profile, from GitHub:
+     dsh plugin --profile web add github:Rice00/dsh-job-progress
+   or from a local checkout (absolute path of the folder):
      dsh plugin --profile web add link:<absolute-path>
 2) Restart that profile — host plugin modules are cached in-process, so the new row is
    only picked up on boot. (UI-only changes just need a browser refresh.)
@@ -307,7 +311,8 @@ you no longer need them. The plugin never deletes anything outside that director
 
 ## Contributing
 
-Issues and pull requests are welcome. Before opening a PR:
+[Issues](https://github.com/Rice00/dsh-job-progress/issues) and pull requests are welcome. Before
+opening a PR:
 
 ```bash
 node test/preflight-client.mjs     # must print ALL PASS

@@ -13,6 +13,7 @@
 [![Runtime: Node 22+](https://img.shields.io/badge/runtime-Node%2022%2B-3c873a.svg)](#兼容性)
 [![Zero config](https://img.shields.io/badge/setup-zero%20config-1c7a54.svg)](#功能)
 [![PRs: welcome](https://img.shields.io/badge/PRs-welcome-7096d1.svg)](#参与贡献)
+[![GitHub stars](https://img.shields.io/github/stars/Rice00/dsh-job-progress?style=flat&label=stars&color=7096d1)](https://github.com/Rice00/dsh-job-progress/stargazers)
 
 <img src="assets/screenshot.png" alt="悬浮小球与任务面板" width="360" />
 
@@ -43,7 +44,8 @@
 ### 本地目录（推荐）
 
 ```bash
-dsh plugin --profile <profile> add link:/abs/path/to/dsh-job-progress
+git clone https://github.com/Rice00/dsh-job-progress.git
+dsh plugin --profile <profile> add link:/abs/path/to/dsh-job-progress   # 指向上面检出的目录
 ```
 
 bundle 补丁会往 profile 里插一行（`job-progress`）。**然后重启这个 profile**——宿主插件模块在进程内缓存，运行中的 harness 不会自动读到新行。
@@ -53,7 +55,7 @@ bundle 补丁会往 profile 里插一行（`job-progress`）。**然后重启这
 ### 从 GitHub 或 npm 安装
 
 ```bash
-dsh plugin --profile <profile> add github:<owner>/<repo>
+dsh plugin --profile <profile> add github:Rice00/dsh-job-progress
 dsh plugin --profile <profile> add dsh-job-progress        # 发布到 npm 之后
 ```
 
@@ -62,8 +64,11 @@ dsh plugin --profile <profile> add dsh-job-progress        # 发布到 npm 之�
 ```
 请帮我安装 DSH 插件 dsh-job-progress：
 
-1) 装进 web profile（用这个仓库的绝对路径）：
-     dsh plugin --profile web add link:<绝对路径>
+1) 装进 web profile，两种来源任选：
+     从 GitHub：
+       dsh plugin --profile web add github:Rice00/dsh-job-progress
+     或从本地检出（填这个文件夹的绝对路径）：
+       dsh plugin --profile web add link:<绝对路径>
 2) 重启该 profile——宿主插件模块在进程内缓存，新行只在启动时读。
    （只改界面的话，刷新浏览器就够了。）
 3) 验证：
@@ -273,7 +278,7 @@ dsh plugin --profile <profile> remove dsh-job-progress
 
 ## 参与贡献
 
-欢迎提 issue 和 PR。开 PR 之前：
+欢迎提 [issue](https://github.com/Rice00/dsh-job-progress/issues) 和 PR。开 PR 之前：
 
 ```bash
 node test/preflight-client.mjs     # 必须 ALL PASS
