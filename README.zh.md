@@ -15,7 +15,7 @@
 [![PRs: welcome](https://img.shields.io/badge/PRs-welcome-7096d1.svg)](#参与贡献)
 [![GitHub stars](https://img.shields.io/github/stars/Rice00/dsh-job-progress?style=flat&label=stars&color=7096d1)](https://github.com/Rice00/dsh-job-progress/stargazers)
 
-<img src="assets/screenshot.png" alt="悬浮小球与任务面板" width="360" />
+![悬浮小球与任务面板](assets/screenshot.png)
 
 <sub>小球浮在对话上方，角标显示正在跑的数量，点开就是任务面板。</sub>
 

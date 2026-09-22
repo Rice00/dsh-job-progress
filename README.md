@@ -16,7 +16,7 @@ downloads, model conversions, renders, batch jobs — anything that runs in the 
 [![PRs: welcome](https://img.shields.io/badge/PRs-welcome-7096d1.svg)](#contributing)
 [![GitHub stars](https://img.shields.io/github/stars/Rice00/dsh-job-progress?style=flat&label=stars&color=7096d1)](https://github.com/Rice00/dsh-job-progress/stargazers)
 
-<img src="assets/screenshot.png" alt="The floating ball and its task panel" width="360" />
+![The floating ball and its task panel](assets/screenshot.png)
 
 <sub>The ball floats over the conversation, badges the running count, and expands into the task panel.</sub>
 
