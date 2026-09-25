@@ -1,6 +1,6 @@
 {
   "name": "dsh-job-progress",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Live progress for long-running background jobs in the DeepSeek Harness web GUI: a draggable floating ball with a per-session task panel showing done/total, speed and ETA.",
   "type": "module",
   "main": "lib/index.js",
