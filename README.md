@@ -9,6 +9,7 @@
 A DeepSeek Harness plugin showing live progress for long-running background jobs:
 downloads, model conversions, renders, batch jobs — anything that runs in the background.
 
+[![npm](https://img.shields.io/npm/v/dsh-job-progress?color=2f7de1)](https://www.npmjs.com/package/dsh-job-progress)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2f7de1.svg)](./LICENSE)
 [![Platform: DSH web](https://img.shields.io/badge/platform-DSH%20web-334eac.svg)](#compatibility)
 [![Runtime: Node 22+](https://img.shields.io/badge/runtime-Node%2022%2B-3c873a.svg)](#compatibility)
@@ -56,11 +57,11 @@ host plugin modules are cached in-process, so a running harness will not pick th
 host code, after a refresh for UI code), but the folder must not be moved afterwards. To copy the
 files instead, use `file:/abs/path/to/dsh-job-progress` — then later edits need a re-install.
 
-### From GitHub or npm
+### From npm or GitHub
 
 ```bash
-dsh plugin --profile <profile> add github:Rice00/dsh-job-progress
-dsh plugin --profile <profile> add dsh-job-progress        # once published to npm
+dsh plugin --profile <profile> add dsh-job-progress                    # npm
+dsh plugin --profile <profile> add github:Rice00/dsh-job-progress      # GitHub
 ```
 
 ### For an AI assistant (copy-paste)
@@ -68,10 +69,11 @@ dsh plugin --profile <profile> add dsh-job-progress        # once published to n
 ```
 Please install the DSH plugin dsh-job-progress for me:
 
-1) Install it into the web profile, from GitHub:
-     dsh plugin --profile web add github:Rice00/dsh-job-progress
-   or from a local checkout (absolute path of the folder):
-     dsh plugin --profile web add link:<absolute-path>
+1) Install it into the web profile:
+     from npm:      dsh plugin --profile web add dsh-job-progress
+     from GitHub:   dsh plugin --profile web add github:Rice00/dsh-job-progress
+     local checkout (absolute path of the folder):
+                    dsh plugin --profile web add link:<absolute-path>
 2) Restart that profile — host plugin modules are cached in-process, so the new row is
    only picked up on boot. (UI-only changes just need a browser refresh.)
 3) Verify:

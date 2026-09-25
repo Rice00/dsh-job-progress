@@ -8,6 +8,7 @@
 
 一个 DeepSeek Harness 插件：为长时间运行的后台任务显示实时进度。下载、模型转换、渲染、批量任务，都算。
 
+[![npm](https://img.shields.io/npm/v/dsh-job-progress?color=2f7de1)](https://www.npmjs.com/package/dsh-job-progress)
 [![License: MIT](https://img.shields.io/badge/License-MIT-2f7de1.svg)](./LICENSE)
 [![Platform: DSH web](https://img.shields.io/badge/platform-DSH%20web-334eac.svg)](#兼容性)
 [![Runtime: Node 22+](https://img.shields.io/badge/runtime-Node%2022%2B-3c873a.svg)](#兼容性)
@@ -52,11 +53,11 @@ bundle 补丁会往 profile 里插一行（`job-progress`）。**然后重启这
 
 `link:` 是活链接：**改源码立刻生效**（宿主代码重启后生效，界面代码刷新后生效），但装完之后不能挪动这个目录。想连文件一起复制走，用 `file:/abs/path/to/dsh-job-progress`，代价是以后每次改都得重新装一遍。
 
-### 从 GitHub 或 npm 安装
+### 从 npm 或 GitHub 安装
 
 ```bash
-dsh plugin --profile <profile> add github:Rice00/dsh-job-progress
-dsh plugin --profile <profile> add dsh-job-progress        # 发布到 npm 之后
+dsh plugin --profile <profile> add dsh-job-progress                    # npm
+dsh plugin --profile <profile> add github:Rice00/dsh-job-progress      # GitHub
 ```
 
 ### 交给 AI 助手（直接复制）
@@ -64,7 +65,9 @@ dsh plugin --profile <profile> add dsh-job-progress        # 发布到 npm 之�
 ```
 请帮我安装 DSH 插件 dsh-job-progress：
 
-1) 装进 web profile，两种来源任选：
+1) 装进 web profile，三种来源任选：
+     从 npm：
+       dsh plugin --profile web add dsh-job-progress
      从 GitHub：
        dsh plugin --profile web add github:Rice00/dsh-job-progress
      或从本地检出（填这个文件夹的绝对路径）：
