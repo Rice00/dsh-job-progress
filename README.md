@@ -194,7 +194,7 @@ claims a clear that did not happen.
 
 | | |
 |---|---|
-| **DSH** | tested on `0.1.5-rc.2`; works in the browser GUI and in the web host embedded in the Desktop app |
+| **DSH** | declared for `0.1.0-rc.6`, `0.1.5-rc.x` and `0.2.x`; exercised on `0.1.5-rc.2`. The declaration has to cover the running version: the plugin manager compares it against the dsh you actually run (`0.2.0-rc.1` today) and refuses to load the plugin when the two do not intersect. Works in the browser GUI and in the web host embedded in the Desktop app |
 | **Profile** | any profile that carries the web UI (`web`, and `desktop` when the same row is added there) |
 | **Runtime** | Node 22+ (the plugin adds no dependencies of its own) |
 | **Job kinds** | anything registered in `ctx.jobs`, regardless of kind |

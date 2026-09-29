@@ -3,6 +3,17 @@
 本文件记录对外发布的版本。格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.2] - 2026-09-29
+
+### 修复
+
+- peer 范围补上 `0.2` 分支，否则在 DSH `0.2.0-rc.1` 上会被插件管理器的兼容性检查拦下而**整个插件不被装载**。
+  原来的 `^0.1.0-rc.6 || ^0.1.5-rc.1` 只覆盖到 `0.1.x`；管理器在安装时按 peer 声明比对运行中的 dsh 版本，
+  不匹配就不装载（日志原文：`Plugin dsh-job-progress@1.0.1 is incompatible with dsh 0.2.0-rc.1: peerDependencies {…}`）。
+  现在为 `^0.1.0-rc.6 || ^0.1.5-rc.1 || ^0.2.0-rc.1`：覆盖 `0.2.0-rc.1` 与整个 `0.2.x`，仍不含 `0.1.6-alpha.x`
+  与 `0.3.x`（未验证的版本不声明）。宿主侧用的是通用接口——`dshHomePath()` 与 Typert Remote，
+  在 `0.2.0-rc.1` 下未发现需要改代码之处。
+
 ## [1.0.1] - 2026-09-25
 
 ### 修复
@@ -50,6 +61,7 @@
 
 - 首个公开发布。
 
+[1.0.2]: https://github.com/Rice00/dsh-job-progress/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/Rice00/dsh-job-progress/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/Rice00/dsh-job-progress/compare/7ede4b8...v1.0.0
 [0.1.1]: https://github.com/Rice00/dsh-job-progress/compare/a76c03d...7ede4b8
