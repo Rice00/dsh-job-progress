@@ -3,6 +3,16 @@
 本文件记录对外发布的版本。格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.3] - 2026-09-30
+
+### 新增
+
+- 插件面板图标：`assets/icon.png`，并在 `package.json` 声明 `"icon": "./assets/icon.png"`。
+  全局「插件」页的图标来自清单里的 `icon` 字段（`@deepseek-ai/dsh-app-boot` 的 `iconOf()`），
+  不声明就退回默认插画。图标由现有 logo 缩到 256×256 生成（保留 alpha）：logo 本身
+  **320,676 字节**，超过 `iconOf()` 强制的 **256 KiB** 上限（会抛 `icon exceeds 256 KiB`），
+  所以另出一张小图，logo 仍留给 README。
+
 ## [1.0.2] - 2026-09-29
 
 ### 修复
@@ -61,6 +71,7 @@
 
 - 首个公开发布。
 
+[1.0.3]: https://github.com/Rice00/dsh-job-progress/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/Rice00/dsh-job-progress/compare/v1.0.1...v1.0.2
 [1.0.1]: https://github.com/Rice00/dsh-job-progress/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/Rice00/dsh-job-progress/compare/7ede4b8...v1.0.0
