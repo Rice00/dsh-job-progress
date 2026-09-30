@@ -40,6 +40,7 @@ downloads, model conversions, renders, batch jobs — anything that runs in the 
 | 🧩 **Any job kind** | Shell commands, ComfyUI renders, anything that registers a background job. |
 | 🔑 **Zero config** | No credentials, no tokens, no network calls: it reads the job registry and its own files. |
 | 📦 **No build step** | The client plugin is a hand-written module-loader module; no bundler output to keep in sync. |
+| 🖼️ **Panel icon** | Ships `assets/icon.png` (a manifest-relative `icon`, under the 256 KiB cap), so the global Plugins page shows this plugin's own mark. |
 
 ## Install
 
