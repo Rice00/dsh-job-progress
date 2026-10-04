@@ -42,6 +42,11 @@
   "engines": {
     "node": ">=22.19.0"
   },
+  "scripts": {
+    "test": "node test/preflight-client.mjs",
+    "test:client": "node test/preflight-client.mjs",
+    "test:host": "node test/preflight-host.mjs"
+  },
   "dsh": {
     "bundle": {
       "patch": "./cordis.patch.yml"
