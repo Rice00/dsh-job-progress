@@ -47,7 +47,12 @@ jobs:
       # happens to bundle is not something a release should bet on.
       - run: npm install -g npm@11
       - run: npm --version
-      - run: npm ci
+      # No `npm ci` here on purpose: the package's peer dependencies are the
+      # harness' own @deepseek-ai packages, and installing them needs a DSH
+      # installation (they are not on the public registry). This package has no
+      # runtime dependencies of its own — it ships two hand-written files — so a
+      # release has nothing to install. The first run of this workflow died on
+      # exactly that, which is why the step is gone rather than fixed.
       - name: The tag and the package version must agree
         if: startsWith(github.ref, 'refs/tags/')
         run: |
