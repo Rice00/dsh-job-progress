@@ -1,4 +1,5 @@
 node_modules/
 *.log
+.commit-msg-*
 .DS_Store
 Thumbs.db
