@@ -78,13 +78,21 @@ check('factory 可执行并返回 exports', () => {
 });
 check('exports.apply 是函数', () => { if (typeof mod?.apply !== 'function') throw new Error('缺少 apply'); });
 check('exports.inject 是数组', () => { if (!Array.isArray(mod?.inject)) throw new Error('缺少 inject'); });
+check('inject 里带了官方作业模型 jobs', () => {
+  // 注册表作业的镜像来自 dsh-api-job-controller 的客户端服务（注册名 `jobs`）。
+  // 不注入它，插件就只能看进度文件 —— 2026-10-04 之前的实际状态。
+  if (!Array.isArray(mod?.inject) || !mod.inject.includes('jobs')) throw new Error("inject 缺少 'jobs'");
+});
 
 // ── apply(ctx) 与组件渲染 ───────────────────────────────────────────────
 const registered = [];
+// 官方客户端作业模型桩：快照形如 { rows: { <sessionId>: JobView[] }, observed: {} }。
+const jobsModelStub = { rows: {}, observed: {}, getSnapshot() { return this; }, subscribe: () => () => {} };
 const ctxStub = {
   effect: (fn) => { fn(); return () => {}; },
   locale: { register: () => () => {} },
   connection: { rpc: { call: async () => ({ ok: true, value: { tasks: [] } }) } },
+  jobs: { state: jobsModelStub, watchRows: () => () => {} },
   slots: {
     inject: (_name, fn) => { fn(); },
     register: (spec, component) => { registered.push({ spec, component }); return () => {}; },
@@ -99,16 +107,26 @@ check('注册到会话头部槽位', () => {
 check('有任务时组件不返回 null', () => {
   const component = registered[0].component;
   const useSessions = (select) => select({
-    jobsBySession: { 'session-x': [{ id: 'bash-1', kind: 'pwsh', label: 'x', status: 'running', startedAt: Date.now() }] },
+    rows: { 'session-x': [{ id: 'pwsh-1', kind: 'pwsh', label: 'x', status: 'running', startedAt: Date.now() }] },
   });
   const tree = component({ sessionId: 'session-x', useSessions, t: (key) => key });
   if (tree === null || tree === undefined) throw new Error('有任务时应当渲染出节点');
 });
 check('无任务时组件返回 null', () => {
   const component = registered[0].component;
-  const useSessions = (select) => select({ jobsBySession: {} });
+  const useSessions = (select) => select({ rows: {} });
   const tree = component({ sessionId: 'session-y', useSessions, t: (key) => key });
   if (tree !== null) throw new Error('无任务的会话不应渲染任何东西');
+});
+check('拿不到作业模型时不抛（退化成只看进度文件）', () => {
+  const bare = { ...ctxStub };
+  delete bare.jobs;
+  const seen = [];
+  bare.slots = { inject: (_name, fn) => { fn(); }, register: (spec, component) => { seen.push(component); return () => {}; } };
+  mod.apply(bare);
+  const useSessions = () => undefined;      // 模型不在时也没有行可订阅
+  const tree = seen[0]({ sessionId: 'session-z', useSessions, t: (key) => key });
+  if (tree !== null) throw new Error('没有任务时不应渲染任何东西');
 });
 
 for (const name of passed) console.log(`ok   ${name}`);
