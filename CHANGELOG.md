@@ -3,6 +3,40 @@
 本文件记录对外发布的版本。格式参考 [Keep a Changelog](https://keepachangelog.com/zh-CN/1.1.0/)，
 版本号遵循 [语义化版本](https://semver.org/lang/zh-CN/)。
 
+## [1.0.5] - 2026-10-08
+
+### 新增
+
+- **把进度协议注册成一个「会话可见的技能」**（`ctx.skills.register`）。此前只有读过 README 的
+  生产者才会写进度记录，别的会话压根不知道这条路存在 —— 2026-10-07 实测：本机另一个会话在跑
+  60 GiB 下载，全程只看到命令行，而进度上报的实现（`lib/dsh-progress.mjs`）与文档一直都有。
+  现在插件挂载时会把协议注册成技能 `dsh-job-progress`：任何 agent 一翻技能目录就知道
+  「长任务要报进度」，不必再靠用户把说明贴进提示词。
+  `skills` 服务不是必需依赖：拿不到就安静跳过，注册抛错只记一条 warn，不影响插件其余功能。
+- 技能正文写清两件用户点名的规则：**下载任务必须开「带 ETA 的上报」**（同一个进程里连续
+  `update()` 才算得出速度与剩余时间，只丢一条命令行作业等于没上报）；**面板标题写任务名**
+  （「下载 anima_5B 模型（6.6 GB）」），不要写整条命令行或 URL —— 面板一行放不下、会截断。
+- README / README.zh 的功能表补一行（「助手自己会找到」/ Agents find it themselves）。
+
+### 修复
+
+- **技能注册成功却加载不出来**。运行时注册（`ctx.skills.register`）只替技能补 `invocation`
+  与 `provider` 两个默认值，**不补 `source`**；而加载时 `validateDefinition` 要求
+  `source` 是字符串。于是条目在技能目录里看得见，真去加载却报
+  `loaded skill "dsh-job-progress" source must be a string`（2026-10-08 实测）。
+  现在定义里显式带上 `source: "plugin"`。
+- **`dsh-progress.mjs set --speed` 只给出速度、ETA 恒为 `null`**。`update()` 里 ETA 是在应用
+  显式参数**之前**算的，所以「自己算好速度、交给 CLI 写一条」这条路永远拿不到剩余时间。
+  现在统一在参数之后重算：给了 `--speed` 就会顺带算出 ETA。
+
+### 测试
+
+- 新增 `test/preflight-skill.mjs`（16 项）：钉死注册契约（名称 / 描述 / 何时使用 / 正文要点 /
+  `source` / helper 路径真实存在）、skills 服务缺失时的降级、注册抛错时的容错。
+- 新增 `test/preflight-progress.mjs`（12 项，无外部依赖，CI 里也跑）：模块接口的速度与 ETA、
+  原子写、终态，以及 CLI 的 `--speed` → ETA、二次 `set` 沿用同一份记录、`dir` / `clear`。
+- `package.json`：`test` 顺带跑生产者侧自检，新增 `test:progress`，`test:local` 一把跑四项。
+
 ## [1.0.4] - 2026-10-04
 
 ### 修复
@@ -93,6 +127,7 @@
 
 - 首个公开发布。
 
+[1.0.5]: https://github.com/Rice00/dsh-job-progress/compare/v1.0.4...v1.0.5
 [1.0.4]: https://github.com/Rice00/dsh-job-progress/compare/v1.0.3...v1.0.4
 [1.0.3]: https://github.com/Rice00/dsh-job-progress/compare/v1.0.2...v1.0.3
 [1.0.2]: https://github.com/Rice00/dsh-job-progress/compare/v1.0.1...v1.0.2

@@ -41,6 +41,7 @@ downloads, model conversions, renders, batch jobs — anything that runs in the 
 | 🔑 **Zero config** | No credentials, no tokens, no network calls: it reads the job registry and its own files. |
 | 📦 **No build step** | The client plugin is a hand-written module-loader module; no bundler output to keep in sync. |
 | 🖼️ **Panel icon** | Ships `assets/icon.png` (a manifest-relative `icon`, under the 256 KiB cap), so the global Plugins page shows this plugin's own mark. |
+| 🧭 **Agents find it themselves** | The host half registers the progress protocol as a session-visible skill, so an agent starting a long download or encode learns how to report speed and ETA without being told. |
 
 ## Install
 

@@ -1,6 +1,6 @@
 {
   "name": "dsh-job-progress",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Live progress for long-running background jobs in the DeepSeek Harness web GUI: a draggable floating ball with a per-session task panel showing done/total, speed and ETA.",
   "icon": "./assets/icon.png",
   "type": "module",
@@ -43,9 +43,12 @@
     "node": ">=22.19.0"
   },
   "scripts": {
-    "test": "node test/preflight-client.mjs",
+    "test": "node test/preflight-client.mjs && node test/preflight-progress.mjs",
     "test:client": "node test/preflight-client.mjs",
-    "test:host": "node test/preflight-host.mjs"
+    "test:progress": "node test/preflight-progress.mjs",
+    "test:host": "node test/preflight-host.mjs",
+    "test:skill": "node test/preflight-skill.mjs",
+    "test:local": "npm run test:client && npm run test:progress && npm run test:host && npm run test:skill"
   },
   "dsh": {
     "bundle": {
