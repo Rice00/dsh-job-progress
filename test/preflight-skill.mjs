@@ -103,6 +103,18 @@ check('description / whenToUse / content 都是非空字符串', () => {
     }
   }
 });
+// 语言要求必须出现在**目录行**（description）里：没加载技能的会话也能在技能目录看到它，
+// 否则「说明跟随用户界面语言」这条只有读过正文的会话才知道（2026-10-13 实测：新会话写成了英文）。
+// 而且它**不能写死中文** —— 中文界面写中文、英文界面写英文。
+check('目录行（description）里带了「说明跟随用户界面语言」的要求，且没写死中文', () => {
+  const description = ok.calls.registered[0].description;
+  if (!description.includes('用户界面语言')) throw new Error(`description 没提语言要求：${description}`);
+  if (!description.includes('English')) throw new Error(`description 只提了中文，没写成跟随界面语言：${description}`);
+});
+check('正文里的语言要求同样是「跟随界面」，不是「一律中文」', () => {
+  const content = ok.calls.registered[0].content;
+  if (!content.includes('中文界面写中文，英文界面写英文')) throw new Error('正文没有写成跟随界面语言');
+});
 check('正文写了目录、心跳与「别只打 stdout」三件事', () => {
   const content = ok.calls.registered[0].content;
   for (const needle of ['job-progress', 'DSH_SESSION_ID', 'updatedAt', 'stdout']) {

@@ -35,13 +35,14 @@ downloads, model conversions, renders, batch jobs — anything that runs in the 
 | 🖱️ **Draggable** | Put it wherever you like; the position survives page reloads. |
 | 📊 **Live panel** | One row per job: state dot, label, progress bar, `%`, `done/total`, speed, ETA, elapsed time. |
 | 🧹 **Clear finished** | Deletes this session's finished progress files. Running entries are never touched. |
-| 🤝 **No cooperation needed** | Jobs come from the registry, so an unreported job still shows up — just without a bar. |
+| 🤝 **No cooperation needed** | Jobs come from the registry, so an unreported job still shows up — and when its own output prints progress, the panel reads the numbers from there. |
 | 🔒 **Session-scoped** | A session only ever sees its own jobs. Other sessions' work never leaks in. |
 | 🧩 **Any job kind** | Shell commands, ComfyUI renders, anything that registers a background job. |
 | 🔑 **Zero config** | No credentials, no tokens, no network calls: it reads the job registry and its own files. |
 | 📦 **No build step** | The client plugin is a hand-written module-loader module; no bundler output to keep in sync. |
 | 🖼️ **Panel icon** | Ships `assets/icon.png` (a manifest-relative `icon`, under the 256 KiB cap), so the global Plugins page shows this plugin's own mark. |
 | 🧭 **Agents find it themselves** | The host half registers the progress protocol as a session-visible skill, so an agent starting a long download or encode learns how to report speed and ETA without being told. |
+| 🏷️ **Every row answers three questions** | What it is doing, how far along and how long is left — for background shell jobs too: the title is the description the model wrote for that command, and the numbers come from the job's own output. The raw command line is demoted to the tooltip. |
 
 ## Install
 
@@ -268,6 +269,24 @@ This plugin deliberately keeps the squircle: it matches the GUI's own design lan
 </details>
 
 <details>
+<summary><b>For plugin authors — fixed positioning in the title bar</b></summary>
+
+Plugin slots in the desktop GUI render inside the title bar. Its title row carries
+`container-type: inline-size`, and by the CSS containment rules a container query container
+becomes the **containing block for `position: fixed` descendants** — the same effect as an
+ancestor with `transform` or `filter`. The enclosing title cluster also clips with
+`overflow: clip`.
+
+A `position: fixed` panel rendered in-slot therefore resolves its coordinates against a
+30-pixel-tall title row and gets clipped: it exists in the DOM, with plausible numbers, and is
+never painted (issue #1, PR #2). Render the plugin root through
+`createPortal(root, document.body)` — `react-dom` is in the host's static module map — and
+events keep bubbling through the React tree. Moving the node with `appendChild` instead loses
+every pointer event, because React 18 delegates them at the app root.
+
+</details>
+
+<details>
 <summary><b>Development</b></summary>
 
 ```bash
@@ -322,7 +341,8 @@ opening a PR:
 node test/preflight-client.mjs     # must print ALL PASS
 ```
 
-Keep the client plugin dependency-free (React only) and run the preflight after any edit — it exists
+Keep the client plugin free of npm dependencies of its own — it may use only the runtimes the host already
+provides (`react`, `react-dom`) — and run the preflight after any edit — it exists
 because client-side mistakes are otherwise invisible.
 
 ## License

@@ -150,6 +150,36 @@ check('拿不到作业模型时不抛（退化成只看进度文件）', () => {
   if (tree !== null) throw new Error('没有任务时不应渲染任何东西');
 });
 
+// ── 行的「三个问题」契约（2026-10-13）：在做什么 / 到哪了 / 还要多久 ────────
+check('每行都给出标注：据输出估算 / 未上报进度', () => {
+  const model = mod.__rowModel;
+  if (model === undefined) throw new Error('客户端没暴露 __rowModel，行契约就验不了');
+  const t = (key) => key;
+  const derived = model.rowNumbers({ hasProgress: true, derived: true, unit: 'percent', done: 45, total: 100, speed: 0, eta: null }, t, true, 45, 1000);
+  if (!derived.includes('meta.derived')) throw new Error(`估算标注没出现：${derived.join(' · ')}`);
+  if (derived.some((part) => part.includes('/'))) throw new Error(`percent 行不该拼分母：${derived.join(' · ')}`);
+  const bare = model.rowNumbers({ hasProgress: false, unit: 'count', done: 0, total: 0, speed: 0, eta: null }, t, true, null, 1000);
+  if (!bare.includes('meta.noProgress')) throw new Error(`未上报进度标注没出现：${bare.join(' · ')}`);
+  const settled = model.rowNumbers({ hasProgress: false, unit: 'count' }, t, false, null, 1000);
+  if (settled.includes('meta.noProgress')) throw new Error('已经结束的行不该再挂「未上报进度」');
+});
+check('悬停里保留原始命令行（标题不再是命令）', () => {
+  const t = (key) => key;
+  const tooltip = mod.__rowModel.rowTooltip({ label: '下载 anima_5B 模型', command: 'node dl.mjs --url x' }, t);
+  if (!tooltip.startsWith('下载 anima_5B 模型')) throw new Error('悬停没有以任务名开头');
+  if (!tooltip.includes('node dl.mjs')) throw new Error('悬停里没有原始命令行');
+  if (mod.__rowModel.rowTooltip({ label: 'x' }, t) !== 'x') throw new Error('没有命令时悬停应当就是标题');
+});
+check('宿主给不出标题时，兜底文案走界面语言的词典', () => {
+  const seen = [];
+  const t = (key, params) => { seen.push({ key, params }); return key; };
+  if (mod.__rowModel.rowTitle({ kind: 'pwsh', jobId: 'pwsh-3' }, t) !== 'row.jobFallback') throw new Error('兜底没走词典');
+  const last = seen[seen.length - 1];
+  if (last?.params?.kind !== 'pwsh' || last?.params?.id !== 'pwsh-3') throw new Error(`词典参数不对：${JSON.stringify(last)}`);
+  if (mod.__rowModel.rowTitle({ label: '下载 anima_5B 模型' }, t) !== '下载 anima_5B 模型') throw new Error('有标题时不该走兜底');
+  if (mod.__rowModel.rowTooltip({ kind: 'pwsh', jobId: 'pwsh-9' }, t) !== 'row.jobFallback') throw new Error('空标题的悬停也应当走词典');
+});
+
 for (const name of passed) console.log(`ok   ${name}`);
 if (failed.length > 0) {
   console.error('');
