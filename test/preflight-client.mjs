@@ -36,6 +36,17 @@ const check = (name, fn) => {
 // ── 复现模块加载器：它只做一件事，把模块描述对象交给执行器 ──────────────
 let loaded = null;
 globalThis.window = { __ModuleLoader__: { load: (mod) => { loaded = mod; } } };
+// portal 渲染目标是 document.body（浏览器里恒存在）；预检环境补一个最小桩，
+// 覆盖 client.js 在 apply/组件体里用到的 DOM API（样式注入、外点监听）。
+const headStub = { appendChild: () => {} };
+globalThis.document = {
+  body: { nodeType: 1 },
+  head: headStub,
+  querySelector: () => null,
+  createElement: () => ({ textContent: '', dataset: {} }),
+  addEventListener: () => {},
+  removeEventListener: () => {},
+};
 
 let importError = null;
 try {
@@ -66,9 +77,19 @@ const reactShim = {
   useMemo: (fn) => fn(),
   useCallback: (fn) => fn,
 };
+const reactDomShim = {
+  // 2026-11-18: the ball renders through createPortal into document.body —
+  // the desktop GUI mounts plugin slots inside a container-type:inline-size
+  // title row, which becomes the containing block for fixed descendants and
+  // gets overflow-clipped, so an in-slot fixed ball can never be seen.
+  // react-dom is part of the host's staticModules (same as react), so it is
+  // not a new package.json dependency.
+  createPortal: (children, container) => ({ portalChildren: children, portalContainer: container }),
+};
 const requireStub = (name) => {
   if (name === 'react') return reactShim;
-  throw new Error(`客户端半边不该 require ${JSON.stringify(name)}（除 react 外都应收敛掉）`);
+  if (name === 'react-dom') return reactDomShim;
+  throw new Error(`客户端半边不该 require ${JSON.stringify(name)}（除 react / react-dom 外都应收敛掉）`);
 };
 
 let mod = null;
